@@ -22,28 +22,17 @@
         <link rel="stylesheet" href="static/styles/styles.css">
         <link rel="shortcut icon" type="image/png" href="static/images/favicon.png">
         <link rel="apple-touch-icon-precomposed" href="static/images/apple-touch-icon.png">
-
-        <script>
-            var _gaq = _gaq || [];
-            _gaq.push(['_setAccount', 'UA-29707119-1']);
-            _gaq.push(['_trackPageview']);
-            (function() {
-                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-            })();
-        </script>
     </head>
     <body>
         <div class="container-fluid">
             <header>
                 <h1 class="my-4 display-4">Apple Keynote Bingo!</h1>
-                <h2 class="mb-4 h5">September 2019 Edition</h2>
+                <h2 class="mb-4 h5">WWDC 2020 Edition</h2>
             </header>
 
             <div id="bingo">
                 <h1 class="my-4 display-1">BINGO!</h1>
-                <a class="btn btn-dark" href="?">Play again?</a>
+                <a class="btn btn-dark" href="">Play again?</a>
             </div>
 
             <table id="bingoCard" class="table-responsive my-4 mx-auto">
@@ -52,14 +41,14 @@
             </table>
 
             <footer>
-                <a class="btn btn-outline-dark mr-2" href="?">New Bingo Card</a>
-                <a class="btn btn-outline-dark ml-2" target="_blank" href="http://twitter.com/intent/tweet?text=I+am+playing+Apple+Keynote+Bingo!&url=https%3A%2F%2Fkeynotebingo.github.io%2F&hashtags=AppleKeynoteBingo">Tweet This</a>
+                <a class="btn btn-outline-dark mr-2" href="index.html">New Bingo Card</a>
                 <p class="mt-4 small">
-                    Made with love in Edinburgh, Scotland by <a target="_blank" href="http://twitter.com/patrickhmason">@patrickhmason</a> and <a target="_blank" href="http://twitter.com/davidmoss">@davidmoss</a>
+                    Originally made with love in Edinburgh, Scotland by <a target="_blank" href="http://twitter.com/patrickhmason">@patrickhmason</a> and <a target="_blank" href="http://twitter.com/davidmoss">@davidmoss</a>
                 </p>
             </footer>
         </div>
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js">
+        </script>
         <script>
             strings = [
                 "Tim Cook",
@@ -161,13 +150,13 @@
                 "Price Anxiety – does that include a stand?",
                 "Let’s face it – the camera’s all that really matters"
             ]
-
-            function shuffle(array) {
+            function shuffle(seed, array) {
                 var currentIndex = array.length;
                 var temporaryValue;
                 var randomIndex;
+                var myrng = new Math.seedrandom(seed);
                 while (0 !== currentIndex) {
-                    randomIndex = Math.floor(Math.random() * currentIndex);
+                    randomIndex = Math.floor(myrng() * currentIndex);
                     currentIndex -= 1;
                     temporaryValue = array[currentIndex];
                     array[currentIndex] = array[randomIndex];
@@ -175,8 +164,15 @@
                 }
                 return array;
             }
+            const urlParams = new URLSearchParams(window.location.search);
+            var shuffled_strings;
+            if(urlParams.has('name')) {
+              shuffled_strings = shuffle(urlParams.get('name'), strings)
+            } else {
+              var name = prompt("Enter your name please!", "Text");
+              window.location.href = window.location + '?name=' + name
+            }
 
-            var shuffled_strings = shuffle(strings);
             el_playcard = document.getElementById('playCard');
             for(var row = 0; row < 5; row += 1) {
                 el_row = el_playcard.insertRow(-1);
